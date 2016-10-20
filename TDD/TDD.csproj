@@ -67,7 +67,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CalcStatsTest.cs" />
-    <Compile Include="FuzzBuzzTest.cs" />
+    <Compile Include="FizzBuzzPlusTest.cs" />
+    <Compile Include="FizzBuzzTest.cs" />
     <Compile Include="LeapYearCheckerTest.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
