@@ -66,6 +66,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BowlingTest\Game.cs" />
     <Compile Include="CalcStatsTest.cs" />
     <Compile Include="CombinedNumberTest.cs" />
     <Compile Include="FizzBuzzPlusTest.cs" />

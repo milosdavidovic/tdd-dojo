@@ -1,10 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TDD
 {
@@ -12,13 +8,13 @@ namespace TDD
     public class StringCalculatorTest
     {
         [TestMethod]
-        public void ForEmptyString_AddMethod_ReturnZero()
+        public void ForEmptyString_AddMethod_ReturnsZero()
         {
             var monkey = Calculator.Add("");
             Assert.AreEqual(0, monkey);
         }
         [TestMethod]
-        public void ForSingleNumber_Addmethod_ReturnsSum()
+        public void ForSingleNumber_AddMethod_ReturnsThatNumber()
         {
             var monkey = Calculator.Add("2");
             Assert.AreEqual(2, monkey);
@@ -30,82 +26,78 @@ namespace TDD
             Assert.AreEqual(5, monkey);
         }
         [TestMethod]
-        public void ForTwoNumbersNewLineDelimiterd_AddMethod_ReturnSum()
+        public void ForTwoNumbersNewLineDelimited_AddMethod_ReturnsSum()
         {
-            var monkey = Calculator.Add("2,6\n10");
-            Assert.AreEqual(18, monkey);
+            var monkey = Calculator.Add("2\n3");
+            Assert.AreEqual(5, monkey);
         }
         [TestMethod]
-        public void ForThreeNumbersEatherDelimited_AddMethod_ReturnsSum()
+        public void ForThreeNumbersEatherWayDelimited_AddMethod_ReturnsSum()
         {
-            var monkey = Calculator.Add("2,6\n10");
-            Assert.AreEqual(18, monkey);
+            var monkey = Calculator.Add("2\n3,1");
+            Assert.AreEqual(6, monkey);
         }
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
-        public void ForNegatives_AddMethod_ThrowesExeption()
+        public void ForNegatives_AddMethod_ThrowsExeption()
         {
-            var monkey = Calculator.Add("-2,6\n10");
+            var monkey = Calculator.Add("2\n3,-1");
         }
         [TestMethod]
         public void ForNumbersOverOneThousand_AddMethod_IgnoresThem()
         {
-            var monkey = Calculator.Add("1001,2,6\n10");
-            Assert.AreEqual(18, monkey);
-        }
-
-        [TestMethod]
-        public void ForSingleCharDelimiter_AddMethod_IncludesDelimiterAndReturnsSum()
-        {
-            var monkey = Calculator.Add("//#1001,2,6\n10#2");
-            Assert.AreEqual(20, monkey);
+            var monkey = Calculator.Add("2\n3,10001");
+            Assert.AreEqual(5, monkey);
         }
         [TestMethod]
-        public void ForMultiCharDelimiter_AddMethod_ReturnSum()
+        public void ForSingleCharDelimitersdefined_AddMethod_AddNewDelimiterAndReturnsSum()
         {
-            var monkey = Calculator.Add("//[###]1001,2,6\n10###2###1");
-            Assert.AreEqual(21, monkey);
+            var monkey = Calculator.Add("//#2\n3#1");
+            Assert.AreEqual(6, monkey);
+        }
+        [TestMethod]
+        public void ForMultiCharDelimitersdefined_AddMethod_AddNewDelimiterAndReturnsSum()
+        {
+            var monkey = Calculator.Add("//[$#]2\n3$#1");
+            Assert.AreEqual(6, monkey);
         }
     }
 
-    public static class Calculator
+    public class Calculator
     {
         public static int Add(string v)
         {
+            int retvalue = 0;
             List<string> delimiters = new List<string>() { ",", "\n" };
-            var retvalue = 0;
-            if (IsEmptyString(v))
+            if (!string.IsNullOrEmpty(v))
             {
-                return 0;
-            }
-            else
-            {
-                if (ContainsSingleCharDelimiter(v))
+                if (ContainsMulticharDelimiter(v))
                 {
-                    var newMultiCharDelimiter = v.Substring(3, v.IndexOf("]") - 3);
-                    delimiters.Add(newMultiCharDelimiter);
-                    v = v.Remove(0, newMultiCharDelimiter.Length + 4);
+                    var newDelimiter = v.Substring(3, v.IndexOf("]") - 3);
+                    delimiters.Add(newDelimiter);
+                    v = v.Remove(0, v.IndexOf("]") + 1);
                 }
-                else if (ContainsMulticharDelimiter(v))
+                else if (ContainsSingleCharDelimiter(v))
                 {
-                    delimiters.Add(v.Substring(2, 1));
+                    var newdelimiter = v.Substring(2, 1);
+                    delimiters.Add(newdelimiter);
                     v = v.Remove(0, 3);
                 }
-                retvalue = DoAdding(v, delimiters);
+                var numbers = v.Split(delimiters.ToArray(), StringSplitOptions.None);
+                retvalue = DoActualAdding(numbers);
             }
             return retvalue;
         }
 
-        private static int DoAdding(string v, List<string> delimiters)
+        private static int DoActualAdding(string[] numbers)
         {
-            var retvalue = 0;
-            var numbersToSum = v.Split(delimiters.ToArray(), StringSplitOptions.None);
-            foreach (var item in numbersToSum)
+            int retvalue = 0;
+            foreach (var n in numbers)
             {
-                var number = Convert.ToInt32(item);
+                var number = Convert.ToInt32(n);
                 if (number < 0)
                 {
-                    throw new ArgumentException("No negatives bitch!");
+                    throw new ArgumentException();
                 }
                 if (number > 1000)
                 {
@@ -113,22 +105,18 @@ namespace TDD
                 }
                 retvalue += number;
             }
-            return retvalue;
-        }
 
-        private static bool ContainsMulticharDelimiter(string v)
-        {
-            return v.Contains("//");
+            return retvalue;
         }
 
         private static bool ContainsSingleCharDelimiter(string v)
         {
-            return v.Contains("//[");
+            return v.Contains("//");
         }
 
-        private static bool IsEmptyString(string v)
+        private static bool ContainsMulticharDelimiter(string v)
         {
-            return v == "";
+            return v.Contains("//[");
         }
     }
 }
