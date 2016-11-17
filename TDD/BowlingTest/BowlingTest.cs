@@ -30,7 +30,9 @@ namespace TDD.BowlingTest
             }
             Assert.AreEqual(20, g.Score());
         }
-        //testOneSpare
+        // Spare is when all pins are nocked down in two tries
+        // Bonus is number of pins nocked down in next roll
+        // testOneSpare
         [TestMethod]
         public void ForOneSpare_Score_ReturnsScore()
         {
@@ -44,36 +46,69 @@ namespace TDD.BowlingTest
             }
             Assert.AreEqual(16, g.Score());
         }
+        // Strike is when all pins are nocked down in a single roll
+        // Bonus is number of pins nocked doen in next two rolls
+        // testOneStrike
 
-        //testOneStrike
-
-        //testPerfectGame
+        // testPerfectGame
     }
 
     public class Game
     {
-        private int[] rolls = new int[21];
-        private int rollsPlayed = 0;
+        private Round[] rounds = new Round[10];
+        private int roundNumber = 0;
+        private int rollNumber = 0;
+        private bool isSpareBonusActive = false;
+        private bool isStrikeBonusActive = false;
+
         public Game()
         {
 
         }
 
-        public void Roll(int pins)
+        public void Roll(int nockedPins)
         {
-            rolls[rollsPlayed] = pins;
-            rollsPlayed++;
+            if (rollNumber == 0)
+            {
+                rounds[roundNumber] = new Round();
+            }
+            rounds[roundNumber].Rolls.Add(nockedPins);
+            var sumNockedPins = rounds[roundNumber].Rolls.Sum();
+            if (sumNockedPins == 10 || rollNumber == 1)
+            {
+                rollNumber = 0;
+                roundNumber++;
+                return;
+            }
+            rollNumber++;
         }
 
         public int Score()
         {
             int score = 0;
-            bool foundSpare = false;
-            for (int i = 0; i < 21; i++)
+            foreach (var round in rounds)
             {
-                score += rolls[i];
+                score += round.Rolls.Sum();
+                if (isSpareBonusActive)
+                {
+                    score += round.Rolls.First();
+                }
+                if (round.Rolls.Sum() == 10)
+                {
+                    isSpareBonusActive = true;
+                }
             }
-            return rolls.Sum();
+            return score;
+        }
+
+        internal class Round
+        {
+            public List<int> Rolls { get; set; }
+
+            public Round()
+            {
+                Rolls = new List<int>();
+            }
         }
     }
 }
