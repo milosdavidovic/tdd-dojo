@@ -69,6 +69,7 @@
     <Compile Include="BowlingTest\BowlingTest.cs" />
     <Compile Include="CalcStatsTest.cs" />
     <Compile Include="CombinedNumberTest.cs" />
+    <Compile Include="Empolyees\Employee.cs" />
     <Compile Include="FizzBuzzPlusTest.cs" />
     <Compile Include="FizzBuzzTest.cs" />
     <Compile Include="LeapYearCheckerTest.cs" />

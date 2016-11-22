@@ -56,10 +56,10 @@ namespace TDD.BowlingTest
     public class Game
     {
         private Round[] rounds = new Round[10];
-        private int roundNumber = 0;
-        private int rollNumber = 0;
-        private bool isSpareBonusActive = false;
-        private bool isStrikeBonusActive = false;
+        private int _roundNumber = 0;
+        private int _rollNumber = 0;
+        private bool _isSpareBonusActive = false;
+        private bool _isStrikeBonusActive = false;
 
         public Game()
         {
@@ -68,19 +68,19 @@ namespace TDD.BowlingTest
 
         public void Roll(int nockedPins)
         {
-            if (rollNumber == 0)
+            if (_rollNumber == 0)
             {
-                rounds[roundNumber] = new Round();
+                rounds[_roundNumber] = new Round();
             }
-            rounds[roundNumber].Rolls.Add(nockedPins);
-            var sumNockedPins = rounds[roundNumber].Rolls.Sum();
-            if (sumNockedPins == 10 || rollNumber == 1)
+            rounds[_roundNumber].Rolls.Add(nockedPins);
+            var sumNockedPins = rounds[_roundNumber].Rolls.Sum();
+            if (sumNockedPins == 10 || _rollNumber == 1)
             {
-                rollNumber = 0;
-                roundNumber++;
+                _rollNumber = 0;
+                _roundNumber++;
                 return;
             }
-            rollNumber++;
+            _rollNumber++;
         }
 
         public int Score()
@@ -89,19 +89,19 @@ namespace TDD.BowlingTest
             foreach (var round in rounds)
             {
                 score += round.Rolls.Sum();
-                if (isSpareBonusActive)
+                if (_isSpareBonusActive)
                 {
                     score += round.Rolls.First();
                 }
                 if (round.Rolls.Sum() == 10)
                 {
-                    isSpareBonusActive = true;
+                    _isSpareBonusActive = true;
                 }
             }
             return score;
         }
 
-        internal class Round
+        public class Round
         {
             public List<int> Rolls { get; set; }
 
