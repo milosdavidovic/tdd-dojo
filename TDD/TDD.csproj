@@ -69,12 +69,14 @@
     <Compile Include="BowlingTest\BowlingTest.cs" />
     <Compile Include="CalcStatsTest.cs" />
     <Compile Include="CombinedNumberTest.cs" />
-    <Compile Include="Empolyees\Employee.cs" />
+    <Compile Include="Empolyees\EmployeeTest.cs" />
+    <Compile Include="Empolyees\IEmployee.cs" />
     <Compile Include="FizzBuzzPlusTest.cs" />
     <Compile Include="FizzBuzzTest.cs" />
     <Compile Include="LeapYearCheckerTest.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RomanNumbersCalculator.cs" />
     <Compile Include="StringCalculatorTest.cs" />
   </ItemGroup>
   <ItemGroup>
